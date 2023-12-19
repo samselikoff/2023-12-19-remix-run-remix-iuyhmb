@@ -1,10 +1,10 @@
-import type { MetaFunction } from '@remix-run/node';
-import { AnimatedProgressBar } from '../components';
-import { useState } from 'react';
+import type { MetaFunction } from "@remix-run/node";
+import { AnimatedProgressBar } from "../components";
+import { useState } from "react";
 export const meta: MetaFunction = () => {
   return [
-    { title: 'New Remix App' },
-    { name: 'description', content: 'Welcome to Remix!' },
+    { title: "New Remix App" },
+    { name: "description", content: "Welcome to Remix!" },
   ];
 };
 
@@ -17,7 +17,7 @@ export default function Index() {
   const zeroedProgressPercentage = step / totalSteps;
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
+    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <div className="py-4 flex gap-x-8 px-4">
         <button
           type="button"

@@ -1,6 +1,6 @@
-import { motion, useAnimation } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { z } from 'zod';
+import { motion, useAnimation } from "framer-motion";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
 interface ProgressBarProps {
   progress: number; // progress in percentage
@@ -50,8 +50,9 @@ function validateProps(props: any, schema: any): StepProps {
     throw new Error(`Invalid props`);
   }
 }
+
 function Step(props: StepProps) {
-  const validatedProps = validateProps(props, StepPropsSchema);
+  // const validatedProps = validateProps(props, StepPropsSchema);
   const {
     step,
     stepPercentage,
@@ -60,7 +61,8 @@ function Step(props: StepProps) {
     totalSteps,
     height,
     stepScale,
-  } = validatedProps;
+  } = props;
+  // } = validatedProps;
 
   let color = DotColors.future;
   if (Math.abs(stepPercentage - overallProgressPercentage) <= 0.005) {
@@ -68,8 +70,10 @@ function Step(props: StepProps) {
   } else if (stepPercentage < overallProgressPercentage) {
     color = DotColors.completed;
   }
-  const [initialColor] = useState(color);
+  // const [initialColor] = useState(color);
   const h = height * stepScale;
+
+  let isCurrent = color === DotColors.current;
 
   return (
     <motion.div
@@ -82,20 +86,25 @@ function Step(props: StepProps) {
         height: h,
         width: h,
         borderRadius: `50%`,
-        background: color,
+        // background: color,
       }}
       initial={{
-        left: `${(step / totalSteps) * 100}%`,
-        background: initialColor, // Initial color
+        //   // left: `${(step / totalSteps) * 100}%`,
+        backgroundColor: color, // Initial color
       }}
       animate={{
         // left: `${(step / totalSteps) * 100}%`,
-        background: color, // Color to animate to
+        backgroundColor: color, // Color to animate to
       }}
       transition={{
         duration: 0.1,
+        // duration: 10,
         ease: `easeInOut`, // Add easing function here
-        background: { duration: 0.2, ease: `easeInOut` }, // Specify easing for color transition
+        backgroundColor: {
+          duration: 0.2,
+          delay: isCurrent ? 0.2 : 0,
+          ease: `easeInOut`,
+        }, // Specify easing for color transition
       }}
     ></motion.div>
   );
@@ -117,7 +126,7 @@ export const AnimatedProgressBar: React.FC<ProgressBarProps> = ({
     };
   });
 
-  const [animatedProgress, setAnimatedProgress] = useState(progress);
+  // const [animatedProgress, setAnimatedProgress] = useState(progress);
 
   const height = 8;
   const stepScale = 1.75;
@@ -136,6 +145,7 @@ export const AnimatedProgressBar: React.FC<ProgressBarProps> = ({
           backgroundColor: BarColors.incomplete,
         }}
       ></div>
+
       <motion.div
         style={{
           position: `absolute`,
@@ -147,16 +157,10 @@ export const AnimatedProgressBar: React.FC<ProgressBarProps> = ({
           background: BarColors.complete, // Gradient color
           width: `${percentage}%`, // Set width based on progress
         }}
-        onUpdate={(latest) => {
-          const percentString = latest.width.toString();
-          const w = parseFloat(percentString.replace(`%`, ``));
-          // should I bet using doing a setState with the value of w?
-          setAnimatedProgress(w / 100);
-        }}
-        initial={{ width: 0 }} // Initial state of the animation
         animate={{ width: `${percentage}%` }} // End state of the animation
         transition={{ duration: 0.5 }} // Transition properties
       />
+
       {zeroedStepsArray.map((step) => {
         return (
           <Step
@@ -165,7 +169,7 @@ export const AnimatedProgressBar: React.FC<ProgressBarProps> = ({
             height={height}
             stepScale={stepScale}
             stepPercentage={step.progressPercentage}
-            overallProgressPercentage={animatedProgress}
+            overallProgressPercentage={percentage / 100}
             currentStep={currentStep}
             totalSteps={totalSteps}
           />
