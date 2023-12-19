@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-primary: #ff0000;
+  --brand-accent: #00ff00;
+  --gray-300: #ccc;
+}
